@@ -1,0 +1,17 @@
+binance:
+  futures_url: https://testnet.binancefuture.com/fapi
+  futures_data_url: https://testnet.binancefuture.com/futures/data
+  timeout: 30
+
+risk:
+  max_order_notional_usdt: 500
+  max_position_size: 5
+  allowed_leverage: [1, 2, 3, 5]
+  default_leverage: 1
+
+logging:
+  level: DEBUG
+  json_output: true
+  log_dir: logs
+  max_bytes: 10485760
+  backup_count: 3

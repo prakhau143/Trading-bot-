@@ -1,0 +1,17 @@
+binance:
+  futures_url: https://fapi.binance.com/fapi
+  futures_data_url: https://fapi.binance.com/futures/data
+  timeout: 10
+
+risk:
+  max_order_notional_usdt: 10000
+  max_position_size: 100
+  allowed_leverage: [1, 2, 3, 5, 10, 20]
+  default_leverage: 1
+
+logging:
+  level: WARNING
+  json_output: true
+  log_dir: logs
+  max_bytes: 52428800
+  backup_count: 10
