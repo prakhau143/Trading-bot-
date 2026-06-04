@@ -27,16 +27,30 @@ class OrderRecord(Base):
     response_raw: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
     def to_dict(self) -> dict:
-        return {
-            "order_id": self.order_id,
-            "symbol": self.symbol,
-            "side": self.side,
-            "type": self.order_type,
-            "quantity": self.quantity,
-            "price": self.price,
-            "stop_price": self.stop_price,
-            "status": self.status,
+        import json as _json
+        d = {
+            "order_id":      self.order_id,
+            "symbol":        self.symbol,
+            "side":          self.side,
+            "type":          self.order_type,
+            "quantity":      self.quantity,
+            "price":         self.price,
+            "stop_price":    self.stop_price,
+            "status":        self.status,
             "correlation_id": self.correlation_id,
-            "is_dry_run": self.is_dry_run,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "is_dry_run":    self.is_dry_run,
+            "created_at":    self.created_at.isoformat() if self.created_at else None,
+            "avg_price":     None,
         }
+        # Recover avgPrice from the stored Binance response JSON
+        if self.response_raw:
+            try:
+                raw = _json.loads(self.response_raw)
+                avg = raw.get("avgPrice")
+                if avg is not None:
+                    fv = float(avg)
+                    if fv > 0:
+                        d["avg_price"] = round(fv, 6)
+            except Exception:
+                pass
+        return d

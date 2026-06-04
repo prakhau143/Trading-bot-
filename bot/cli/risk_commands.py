@@ -35,8 +35,8 @@ def set_leverage(
             f"  [dim]Max notional at this leverage: "
             f"{response.get('maxNotionalValue', 'N/A')} USDT[/dim]"
         )
-    except BinanceAPIError as exc:
-        print_error(f"Binance API Error: {exc}")
+    except TradingBotError as exc:
+        print_error(f"Error: {exc}")
         raise typer.Exit(1)
 
 
@@ -56,12 +56,12 @@ def set_margin(
         print_success(
             f"Margin type set to [bold]{margin_upper}[/bold] for [cyan]{symbol.upper()}[/cyan]"
         )
-    except BinanceAPIError as exc:
+    except TradingBotError as exc:
         # Binance returns an error if margin type is already set — treat that gracefully
         if "No need to change margin type" in str(exc):
             print_warning(
                 f"Margin type is already [bold]{margin_upper}[/bold] for {symbol.upper()}."
             )
         else:
-            print_error(f"Binance API Error: {exc}")
+            print_error(f"Error: {exc}")
             raise typer.Exit(1)

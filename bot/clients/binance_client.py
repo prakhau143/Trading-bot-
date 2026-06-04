@@ -30,6 +30,12 @@ class TradingClient:
         except BinanceRequestException as exc:
             logger.error("BINANCE_REQUEST_ERROR", extra={"error": str(exc)})
             raise NetworkError(str(exc)) from exc
+        except Exception as exc:
+            # Catches requests.ReadTimeout, ConnectionError, SSLError, etc.
+            # that python-binance does not wrap internally.
+            error_type = type(exc).__name__
+            logger.error("NETWORK_ERROR", extra={"error_type": error_type, "error": str(exc)})
+            raise NetworkError(f"{error_type}: {exc}") from exc
 
     # ── Connectivity ──────────────────────────────────────────────────────────
 

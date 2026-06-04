@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 import typer
 
 from bot.clients.client_factory import get_order_repository, get_trading_client
-from bot.exceptions import BinanceAPIError, TradingBotError
+from bot.exceptions import TradingBotError
 from bot.repository.export_service import ExportService
 from bot.utils.rich_ui import (
     console,
@@ -27,8 +27,8 @@ def balance():
     try:
         balances = client.get_account_balance()
         print_balance_table(balances)
-    except BinanceAPIError as exc:
-        print_error(f"Binance API Error: {exc}")
+    except TradingBotError as exc:
+        print_error(f"Error: {exc}")
         raise typer.Exit(1)
 
 
@@ -40,8 +40,8 @@ def positions(
     try:
         pos = client.get_position_information(symbol=symbol.upper() if symbol else None)
         print_positions_table(pos)
-    except BinanceAPIError as exc:
-        print_error(f"Binance API Error: {exc}")
+    except TradingBotError as exc:
+        print_error(f"Error: {exc}")
         raise typer.Exit(1)
 
 
@@ -53,8 +53,8 @@ def open_orders(
     try:
         orders = client.get_open_orders(symbol=symbol.upper() if symbol else None)
         print_open_orders_table(orders)
-    except BinanceAPIError as exc:
-        print_error(f"Binance API Error: {exc}")
+    except TradingBotError as exc:
+        print_error(f"Error: {exc}")
         raise typer.Exit(1)
 
 
@@ -67,8 +67,8 @@ def trade_history(
     try:
         trades = client.get_account_trades(symbol=symbol.upper(), limit=limit)
         print_trade_history_table(trades)
-    except BinanceAPIError as exc:
-        print_error(f"Binance API Error: {exc}")
+    except TradingBotError as exc:
+        print_error(f"Error: {exc}")
         raise typer.Exit(1)
 
 
@@ -79,8 +79,8 @@ def portfolio():
         balances = client.get_account_balance()
         pos = client.get_position_information()
         print_portfolio_summary(balances, pos)
-    except BinanceAPIError as exc:
-        print_error(f"Binance API Error: {exc}")
+    except TradingBotError as exc:
+        print_error(f"Error: {exc}")
         raise typer.Exit(1)
 
 
@@ -99,6 +99,8 @@ def export_orders(
         svc = ExportService()
         filename = svc.export_orders_csv(orders)
         print_success(f"Exported {len(orders)} order(s) to: {filename}")
+    except typer.Exit:
+        raise
     except Exception as exc:
         print_error(f"Export failed: {exc}")
         raise typer.Exit(1)

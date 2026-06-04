@@ -45,6 +45,16 @@ def print_order_result(response: Dict[str, Any], dry_run: bool = False) -> None:
     # executedQty: explicitly required by task spec
     exec_qty = response.get("executedQty")
 
+    # Only show Price when Binance actually set one (non-zero); "0.00" means N/A for MARKET
+    def _nonzero(val) -> bool:
+        try:
+            return val is not None and float(val) > 0
+        except (ValueError, TypeError):
+            return False
+
+    price_raw    = response.get("price")
+    stop_raw     = response.get("stopPrice")
+
     fields = {
         "Order ID":     order_id,
         "Symbol":       response.get("symbol", "N/A"),
@@ -53,8 +63,9 @@ def print_order_result(response: Dict[str, Any], dry_run: bool = False) -> None:
         "Orig Qty":     response.get("origQty", response.get("quantity", "N/A")),
         "Executed Qty": exec_qty if exec_qty is not None else None,
         "Avg Price":    avg_price_val,
-        "Price":        response.get("price", "N/A"),
-        "Stop Price":   response.get("stopPrice") or None,
+        # Show Price / Stop Price only when they carry a real value
+        "Price":        f"{float(price_raw):.2f}" if _nonzero(price_raw) else None,
+        "Stop Price":   f"{float(stop_raw):.2f}"  if _nonzero(stop_raw)  else None,
         "Status":       response.get("status", "N/A"),
     }
     # Drop rows where value is None (optional fields not present in this response)

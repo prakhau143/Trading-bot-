@@ -13,7 +13,7 @@ from bot.cli.info_commands import (
     positions,
     trade_history,
 )
-from bot.cli.order_commands import bracket_order, cancel_order, place_order
+from bot.cli.order_commands import bracket_order, cancel_order, interactive_menu, place_order, twap_order
 from bot.cli.risk_commands import set_leverage, set_margin
 from bot.core.correlation import set_correlation_id
 from bot.utils.config_loader import get_settings
@@ -33,9 +33,11 @@ app = typer.Typer(
 )
 
 # ── Order Commands ────────────────────────────────────────────────────────────
-app.command("place-order", help="Place a futures order (MARKET, LIMIT, STOP_MARKET, etc.)")(place_order)
-app.command("bracket-order", help="Place an entry + take-profit + stop-loss bracket")(bracket_order)
-app.command("cancel-order", help="Cancel an open order by ID")(cancel_order)
+app.command("place-order",   help="Place a futures order (MARKET, LIMIT, STOP_MARKET, etc.)")(place_order)
+app.command("bracket-order", help="Entry + take-profit + stop-loss in one command")(bracket_order)
+app.command("twap-order",    help="TWAP: split a large order into equal time-sliced market orders")(twap_order)
+app.command("cancel-order",  help="Cancel an open order by ID")(cancel_order)
+app.command("menu",          help="Interactive guided menu — place orders & view account")(interactive_menu)
 
 # ── Account / Info Commands ───────────────────────────────────────────────────
 app.command("balance", help="Show futures wallet balance")(balance)
