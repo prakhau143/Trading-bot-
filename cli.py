@@ -3,7 +3,7 @@
 Binance Futures Testnet Trading Bot
 Entry point — registers all CLI commands under a single Typer app.
 """
-import typer
+import typer  
 
 from bot.cli.info_commands import (
     balance,
