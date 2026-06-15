@@ -6,7 +6,7 @@ Entry point — registers all CLI commands under a single Typer app.
 import typer  
 
 from bot.cli.info_commands import (
-    balance,
+    balance,     
     export_orders,
     open_orders,
     portfolio,
