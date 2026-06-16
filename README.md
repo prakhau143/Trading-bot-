@@ -6,7 +6,7 @@ Built beyond the assignment spec to demonstrate real trading-system engineering:
 ---
 
 ## Features
-
+           
 | Category | Feature |
 |---|---|
 | **Orders** | Market, Limit, Stop-Market, Take-Profit-Market, Bracket (entry + TP + SL) |
